@@ -69,7 +69,7 @@ def criar_evento():
         conn.close()
 
 @app.route('/inserir_quiz', methods=['POST'])
-def criar_quiz():
+def inserir_quiz():
     dados = request.json
     titulo = dados.get('titulo')
     descricao = dados.get('descricao')
