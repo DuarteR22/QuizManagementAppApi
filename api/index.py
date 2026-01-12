@@ -121,6 +121,30 @@ def inserir_questao():
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
-   
+     @app.route('/listar_quizzes', methods=['GET'])
+
+def listar_quizzes():
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT qid, titulo, descricao, tempo_max, utilizador_uid, username_criador FROM public.v_lista_quizzes")
+            rows = cursor.fetchall()
+            
+            quizzes = []
+            for r in rows:
+                quizzes.append({
+                    "qid": r[0],
+                    "titulo": r[1],
+                    "descricao": r[2],
+                    "tempo_max": r[3],
+                    "utilizador_uid": r[4],
+                    "username_criador": r[5]
+                })
+            return jsonify(quizzes), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
 if __name__ == '__main__':
     app.run(debug=True)
