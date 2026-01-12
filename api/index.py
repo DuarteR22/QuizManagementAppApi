@@ -73,8 +73,8 @@ def inserir_quiz():
     dados = request.json
     titulo = dados.get('titulo')
     descricao = dados.get('descricao')
-    tempo = dados.get('tempo_max')
-    u_uid = dados.get('utilizador_uid')
+    tempo = int(dados.get('tempo_max'))
+    u_uid = int(dados.get('utilizador_uid'))
 
     conn = connection()
     try:
