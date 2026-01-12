@@ -85,9 +85,9 @@ def inserir_quiz():
             conn.commit()
             
             if novo_id != -1:
-                return jsonify({"mensagem": "Quiz criado com sucesso", "qid": novo_id}), 201
+                return jsonify({"mensagem": "Quiz inserido com sucesso", "qid": novo_id}), 201
             else:
-                return jsonify({"mensagem": "Erro ao inserir na base de dados"}), 400
+                return jsonify({"mensagem": "Erro ao inserir quiz"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
