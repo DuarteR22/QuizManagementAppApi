@@ -68,7 +68,30 @@ def criar_evento():
     finally:
         conn.close()
 
+@app.route('/inserir_quiz', methods=['POST'])
+def criar_quiz():
+    dados = request.json
+    titulo = dados.get('titulo')
+    descricao = dados.get('descricao')
+    tempo = dados.get('tempo_max')
+    u_uid = dados.get('utilizador_uid')
 
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT public.inserir_quiz(%s, %s, %s, %s)", 
+                           (titulo, descricao, tempo, u_uid))
+            novo_id = cursor.fetchone()[0]
+            conn.commit()
+            
+            if novo_id != -1:
+                return jsonify({"mensagem": "Quiz criado com sucesso", "qid": novo_id}), 201
+            else:
+                return jsonify({"mensagem": "Erro ao inserir na base de dados"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
 
      
 if __name__ == '__main__':
