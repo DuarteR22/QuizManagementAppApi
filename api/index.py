@@ -108,8 +108,14 @@ def inserir_questao():
         with conn.cursor() as cursor:
             cursor.execute("SELECT public.inserir_questao(%s, %s, %s, %s, %s, %s)", 
                            (pergunta, respostas, num_r, correta, url, qid))
+            novo_quid = cursor.fetchone()[0]
             conn.commit()
-            return jsonify({"mensagem": "Questão inserida com sucesso!"}), 201
+         if novo_quid != -1:
+            return jsonify({"mensagem": "Questão inserida com sucesso!"
+                            "quid": novo_quid
+                           }), 201
+         else:
+            return jsonify({"mensagem": "Erro ao inserir na base de dados"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
