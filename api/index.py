@@ -93,6 +93,29 @@ def inserir_quiz():
     finally:
         conn.close()
 
+@app.route('/inserir_questao', methods=['POST'])
+def inserir_questao():
+    dados = request.json
+    pergunta = dados.get('pergunta')
+    respostas = dados.get('respostas') 
+    num_r = dados.get('num_respostas')
+    correta = dados.get('resposta_correta')
+    url = dados.get('url_imagem')
+    qid = dados.get('quiz_qid')
+
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT public.inserir_questao(%s, %s, %s, %s, %s, %s)", 
+                           (pergunta, respostas, num_r, correta, url, qid))
+            conn.commit()
+            return jsonify({"mensagem": "Questão inserida com sucesso!"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+   
+
      
 if __name__ == '__main__':
     app.run(debug=True)
