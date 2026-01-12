@@ -1,20 +1,12 @@
 from flask import Flask, jsonify, request
 import  psycopg2
-
+from flask_jwt_extended import JWTManager, create_access_token 
+from datetime import timedelta
 
 app = Flask(__name__)  
 
-#app.config['SECRET_KEY'] = 'it\xb5u\xc3\xaf\xc1Q\xb9\n\x92W\tB\xe4\xfe__\x87\x8c}\xe9\x1e\xb8\x0f'
-
-
-NOT_FOUND_CODE = 400
-OK_CODE = 200
-SUCCESS_CODE = 201
-BAD_REQUEST_CODE = 400
-UNAUTHORIZED_CODE = 401
-FORBIDDEN_CODE = 403
-NOT_FOUND = 404
-SERVER_ERROR = 500
+app.config['JWT_SECRET_KEY'] = 'it\xb5u\xc3\xaf\xc1Q\xb9\n\x92W\tB\xe4\xfe__\x87\x8c}\xe9\x1e\xb8\x0f'
+jwt = JWTManager(app)
 
 def connection():
  return psycopg2.connect(
@@ -36,10 +28,17 @@ def login():
     try:
         with conn.cursor() as cursor:
             cursor.execute("SELECT login(%s,%s)", (username,password))
-            result = cursor.fetchone()[0]
-
-            if result:
-                return jsonify({"mensagem": "Login efetuado com sucesso"}), 200
+            u_uid = cursor.fetchone()[0]
+  
+            if u_uid:
+                access_token = create_access_token(
+                   identity = str(u_uid),
+                   expires_delta=timedelta(minutes=5)
+                )
+                return jsonify({"mensagem": "Login efetuado com sucesso",
+                                "token": access_token,
+                                "u_uid": u_uid
+                               }), 200
             else: 
                 return jsonify({"mensagem": "Credenciais invalidas"}), 401
     except psycopg2.DatabaseError as e:
