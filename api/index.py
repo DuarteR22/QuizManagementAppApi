@@ -110,18 +110,17 @@ def inserir_questao():
                            (pergunta, respostas, num_r, correta, url, qid))
             novo_quid = cursor.fetchone()[0]
             conn.commit()
-         if novo_quid != -1:
-            return jsonify({"mensagem": "Questão inserida com sucesso!"
-                            "quid": novo_quid
-                           }), 201
-         else:
-            return jsonify({"mensagem": "Erro ao inserir na base de dados"}), 400
+            if novo_quid != -1:
+                return jsonify({
+                    "mensagem": "Questão inserida com sucesso!",
+                    "quid": novo_quid
+                }), 201
+            else:
+                return jsonify({"mensagem": "Erro ao inserir na base de dados"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
    
-
-     
 if __name__ == '__main__':
     app.run(debug=True)
