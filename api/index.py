@@ -60,7 +60,7 @@ def criar_evento():
     conn = connection()
     try:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT inserir_utilizador(%s,%s,%s)", (username,password))
+            cursor.execute("SELECT inserir_utilizador(%s,%s)", (username,password))
             conn.commit()
             return jsonify({"mensagem": "Registo efetuado com sucesso!"}), 200
     except psycopg2.DatabaseError as e:
