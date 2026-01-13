@@ -268,5 +268,41 @@ def listar_questao_id():
     finally:
         conn.close()
 
+@app.route('/alterar_quiz', methods=['POST'])
+def alterar_quiz():
+    dados = request.json
+    qid = dados.get('qid')  
+    titulo = dados.get('titulo')
+    descricao = dados.get('descricao')
+    tempo_max = dados.get('tempo_max')
+    
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT public.alterar_quiz(%s, %s, %s, %s)", (qid, titulo, descricao, tempo_max))
+            resultado = cursor.fetchone()[0]
+            conn.commit()
+            if resultado > 0:
+                return jsonify({"mensagem": "Quiz alterado com sucesso!"}), 200
+            else:
+                return jsonify({"mensagem": "Quiz não encontrado"}), 404
+    except Exception as e:
+        if conn: conn.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+@app.route('/listar_quiz_id', methods=['POST'])
+def listar_quiz_id():
+    qid = request.json.get('qid')
+    conn = connection()
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT * FROM public.listar_quiz_id(%s)", (qid,))
+        r = cursor.fetchone()
+        if r:
+            return jsonify({"qid": r[0], "titulo": r[1], "descricao": r[2], "tempo_max": r[3]}), 200
+        return jsonify({"mensagem": "Quiz não encontrado"}), 404
+
+
 if __name__ == '__main__':
     app.run(debug=True)
