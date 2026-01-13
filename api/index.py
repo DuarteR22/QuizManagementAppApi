@@ -216,5 +216,29 @@ def eliminar_questao():
     finally:
         conn.close()
      
+@app.route('/alterar_questao', methods=['POST'])
+def alterar_questao():
+    dados = request.json
+    quid = dados.get('quid')  
+    pergunta = dados.get('pergunta')
+    respostas = dados.get('respostas') 
+    num_respostas = dados.get('num_respostas')
+    resposta_correta = dados.get('resposta_correta')
+    url = dados.get('url_imagem')
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT public.alterar_questao(%s, %s, %s, %s, %s, %s)", (quid, pergunta, num_respostas, respostas, resposta_correta, url))
+            resultado = cursor.fetchone()[0]
+            conn.commit()
+            if resultado > 0:
+                return jsonify({"mensagem": "Questão alterada com sucesso!"}), 200
+            else:
+                return jsonify({"mensagem": "Questão não encontrada"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
 if __name__ == '__main__':
     app.run(debug=True)
