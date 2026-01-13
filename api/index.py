@@ -152,9 +152,6 @@ def eliminar_quiz():
     qid = dados.get('qid')
     u_uid = dados.get('u_uid') 
 
-    if not qid or not u_uid:
-        return jsonify({"mensagem": "Dados incompletos"}), 400
-
     conn = connection()
     try:
         with conn.cursor() as cursor:
@@ -162,9 +159,9 @@ def eliminar_quiz():
             resultado = cursor.fetchone()[0]
             conn.commit()
             if resultado > 0:
-                return jsonify({"mensagem": "Quiz eliminado com sucesso"}), 200
+                return jsonify({"mensagem": "Quiz eliminado com sucesso!"}), 200
             else:
-                return jsonify({"mensagem": "Não permitido ou quiz não encontrado"}), 403
+                return jsonify({"mensagem": "Permissão negada ou Quiz inexistente"}), 403
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
