@@ -146,7 +146,6 @@ def listar_quizzes():
     finally:
         conn.close()
 
-
 @app.route('/eliminar_quiz', methods=['POST'])
 def eliminar_quiz():
     dados = request.json
@@ -168,6 +167,33 @@ def eliminar_quiz():
     finally:
         conn.close()
         
-
+@app.route('/listar_questoes', methods=['POST'])
+def listar_questoes_por_quiz():
+    dados = request.json
+    qid = dados.get('qid')
+    if qid is None:
+        return jsonify({"mensagem": "ID do quiz é obrigatório"}), 400
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT * FROM public.listar_questoes(%s)", (qid,))
+            rows = cursor.fetchall()
+            questoes = []
+            for r in rows:
+                questoes.append({
+                    "quid": r[0],
+                    "pergunta": r[1],
+                    "respostas": r[2],
+                    "num_respostas": r[3],
+                    "resposta_correta": r[4],
+                    "url_imagem": r[5],
+                    "quiz_qid": r[6]
+                })
+            return jsonify(questoes), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+     
 if __name__ == '__main__':
     app.run(debug=True)
