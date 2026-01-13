@@ -121,7 +121,6 @@ def inserir_questao():
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
-     @app.route('/listar_quizzes', methods=['GET'])
 
 @app.route('/listar_quizzes', methods=['GET'])
 def listar_quizzes():
