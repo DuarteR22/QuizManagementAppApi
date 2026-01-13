@@ -249,7 +249,7 @@ def listar_questao_id():
     conn = connection()
     try:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT * FROM public.obter_questao_por_id(%s)", (quid,))
+            cursor.execute("SELECT * FROM public.listar_questao_id(%s)", (quid,))
             r = cursor.fetchone()
             if r:
                 return jsonify({
