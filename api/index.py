@@ -240,5 +240,33 @@ def alterar_questao():
     finally:
         conn.close()
 
+@app.route('/listar_questao_id', methods=['POST'])
+def listar_questao_id():
+    dados = request.json
+    quid = dados.get('quid')
+    if quid is None:
+        return jsonify({"mensagem": "O ID da questão é obrigatório"}), 400
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT * FROM public.obter_questao_por_id(%s)", (quid,))
+            r = cursor.fetchone()
+            if r:
+                return jsonify({
+                    "quid": r[0],
+                    "pergunta": r[1],
+                    "num_respostas": r[2],
+                    "respostas": r[3],
+                    "resposta_correta": r[4],
+                    "url_imagem": r[5],
+                    "quiz_qid": r[6]
+                }), 200
+            else:
+                return jsonify({"mensagem": "Questão não encontrada"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
 if __name__ == '__main__':
     app.run(debug=True)
