@@ -123,6 +123,7 @@ def inserir_questao():
         conn.close()
      @app.route('/listar_quizzes', methods=['GET'])
 
+@app.route('/listar_quizzes', methods=['GET'])
 def listar_quizzes():
     conn = connection()
     try:
@@ -145,6 +146,7 @@ def listar_quizzes():
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
+
 
 @app.route('/eliminar_quiz', methods=['POST'])
 def eliminar_quiz():
