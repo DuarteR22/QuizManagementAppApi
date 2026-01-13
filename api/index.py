@@ -183,8 +183,8 @@ def listar_questoes_por_quiz():
                 questoes.append({
                     "quid": r[0],
                     "pergunta": r[1],
-                    "respostas": r[2],
-                    "num_respostas": r[3],
+                    "num_respostas": r[2],
+                    "respostas": r[3],
                     "resposta_correta": r[4],
                     "url_imagem": r[5],
                     "quiz_qid": r[6]
