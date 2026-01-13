@@ -195,5 +195,26 @@ def listar_questoes_por_quiz():
     finally:
         conn.close()
      
+@app.route('/eliminar_questao', methods=['POST'])
+def eliminar_questao():
+    dados = request.json
+    quid = dados.get('quid')
+    if quid is None:
+        return jsonify({"mensagem": "O ID da questão (quid) é obrigatório."}), 400
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT public.eliminar_questao(%s)", (quid,))
+            resultado = cursor.fetchone()[0]
+            conn.commit()
+            if resultado > 0:
+                return jsonify({"mensagem": "Questão eliminada com sucesso!"}), 200
+            else:
+                return jsonify({"mensagem": "Questão não encontrada ou já eliminada"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+     
 if __name__ == '__main__':
     app.run(debug=True)
