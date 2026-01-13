@@ -300,7 +300,12 @@ def listar_quiz_id():
         cursor.execute("SELECT * FROM public.listar_quiz_id(%s)", (qid,))
         r = cursor.fetchone()
         if r:
-            return jsonify({"qid": r[0], "titulo": r[1], "descricao": r[2], "tempo_max": r[3]}), 200
+            return jsonify({
+                "qid": r[0], 
+                "titulo": r[1], 
+                "descricao": r[2], 
+                "tempo_max": r[3]
+                }), 200
         return jsonify({"mensagem": "Quiz não encontrado"}), 404
 
 
