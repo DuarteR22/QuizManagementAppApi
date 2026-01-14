@@ -232,8 +232,19 @@ def alterar_questao():
     conn = connection()
     try:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT public.alterar_questao(%s, %s, %s, %s, %s, %s)", (quid, pergunta, num_respostas, respostas, resposta_correta, url))
-            resultado = cursor.fetchone()[0]
+            query = """
+                SELECT public.alterar_questao(
+                    %s::bigint, 
+                    %s::text, 
+                    %s::smallint, 
+                    %s::text[], 
+                    %s::smallint, 
+                    %s::text
+                )
+            """
+            cursor.execute(query, (quid, pergunta, num_respostas, respostas, resposta_correta, url))
+            resultado_tupla = cursor.fetchone()
+            resultado = resultado_tupla[0] if resultado_tupla else 0
             conn.commit()
             if resultado > 0:
                 return jsonify({"mensagem": "Questão alterada com sucesso!"}), 200
