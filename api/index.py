@@ -28,8 +28,11 @@ def login():
     try:
         with conn.cursor() as cursor:
             cursor.execute("SELECT login(%s,%s)", (username,password))
-            u_uid = cursor.fetchone()[0]
-  
+            resultado = cursor.fetchone()
+            if(resultado!= None and resultado[0] != None):
+                u_uid = resultado[0]
+            else:
+                u_uid = None
             if u_uid:
                 access_token = create_access_token(
                    identity = str(u_uid),
@@ -46,6 +49,7 @@ def login():
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close() 
+
 
 
 @app.route('/inserir_utilizador', methods=['POST'])
