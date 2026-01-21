@@ -323,6 +323,28 @@ def listar_quiz_id():
                 }), 200
         return jsonify({"mensagem": "Quiz não encontrado"}), 404
 
+@app.route('/executar_quiz', methods=['POST'])
+def executar_quiz():
+    dados = request.json
+    qid = dados.get('qid')
+    if qid is None:
+        return jsonify({"mensagem": "O ID do quiz (qid) é obrigatório"}), 400
+        
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT public.executar_quiz(%s)", (qid,))
+            resultado = cursor.fetchone()[0]
+            conn.commit()
+            if resultado:
+                return jsonify({"mensagem": "Quiz marcado como em execução", "estado": True}), 200
+            else:
+                return jsonify({"mensagem": "Quiz não encontrado", "estado": False}), 404
+    except Exception as e:
+        if conn: conn.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
 
 if __name__ == '__main__':
     app.run(debug=True)
