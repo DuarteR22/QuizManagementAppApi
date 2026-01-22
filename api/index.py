@@ -346,5 +346,28 @@ def executar_quiz():
     finally:
         conn.close()
 
+@app.route('/terminar_quiz', methods=['POST'])
+def terminar_quiz():
+    dados = request.json
+    qid = dados.get('qid')
+    conn = connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT public.terminar_quiz(%s)", (qid,))
+            resultado = cursor.fetchone()[0]
+            conn.commit()
+            
+            if resultado:
+                return jsonify({"mensagem": "Quiz terminado", "estado": False}), 200
+            else:
+                return jsonify({"mensagem": "Quiz não encontrado", "estado": False}), 404
+    except Exception as e:
+        if conn: conn.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
