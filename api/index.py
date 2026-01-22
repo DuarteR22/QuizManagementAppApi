@@ -290,15 +290,16 @@ def alterar_quiz():
     titulo = dados.get('titulo')
     descricao = dados.get('descricao')
     tempo_max = dados.get('tempo_max')
-    
     conn = connection()
     try:
         with conn.cursor() as cursor:
             cursor.execute("SELECT public.alterar_quiz(%s, %s, %s, %s)", (qid, titulo, descricao, tempo_max))
             resultado = cursor.fetchone()[0]
             conn.commit()
-            if resultado > 0:
+            if resultado == 0:
                 return jsonify({"mensagem": "Quiz alterado com sucesso!"}), 200
+            elif resultado == 3:
+                return jsonify({"mensagem": "Quiz em execução"}), 400
             else:
                 return jsonify({"mensagem": "Quiz não encontrado"}), 404
     except Exception as e:
