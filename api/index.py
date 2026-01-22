@@ -299,7 +299,7 @@ def alterar_quiz():
             conn.commit()
             if resultado == 1:
                 return jsonify({"mensagem": "Quiz alterado com sucesso!"}), 200
-            elif resultado == 3:
+            elif resultado == -3:
                 return jsonify({"mensagem": "Quiz em execução"}), 400
             else:
                 return jsonify({"mensagem": "Quiz não encontrado"}), 404
