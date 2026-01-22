@@ -297,7 +297,7 @@ def alterar_quiz():
             cursor.execute("SELECT public.alterar_quiz(%s, %s, %s, %s)", (qid, titulo, descricao, tempo_max))
             resultado = cursor.fetchone()[0]
             conn.commit()
-            if resultado == 0:
+            if resultado == 1:
                 return jsonify({"mensagem": "Quiz alterado com sucesso!"}), 200
             elif resultado == 3:
                 return jsonify({"mensagem": "Quiz em execução"}), 400
