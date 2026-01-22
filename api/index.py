@@ -155,17 +155,18 @@ def eliminar_quiz():
     dados = request.json
     qid = dados.get('qid')
     u_uid = dados.get('u_uid') 
-
     conn = connection()
     try:
         with conn.cursor() as cursor:
             cursor.execute("SELECT public.eliminar_quiz(%s, %s)", (qid, u_uid))
             resultado = cursor.fetchone()[0]
             conn.commit()
-            if resultado > 0:
+            if resultado == 1:
                 return jsonify({"mensagem": "Quiz eliminado com sucesso!"}), 200
-            else:
-                return jsonify({"mensagem": "Permissão negada ou Quiz inexistente"}), 403
+            elif resultado == -3:
+                return jsonify({"mensagem": "Quiz em execução"}), 400
+            else :
+                return jsonify({"mensagem": "Quiz não existe"}), 403
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
