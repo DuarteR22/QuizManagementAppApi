@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 import  psycopg2
-from flask_jwt_extended import JWTManager, create_access_token 
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from datetime import timedelta
 
 app = Flask(__name__)  
@@ -127,6 +127,7 @@ def inserir_questao():
         conn.close()
 
 @app.route('/listar_quizzes', methods=['GET'])
+@jwt_required()
 def listar_quizzes():
     conn = connection()
     try:
