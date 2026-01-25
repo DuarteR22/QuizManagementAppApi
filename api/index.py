@@ -330,9 +330,6 @@ def listar_quiz_id():
 def executar_quiz():
     dados = request.json
     qid = dados.get('qid')
-    if qid is None:
-        return jsonify({"mensagem": "O ID do quiz (qid) é obrigatório"}), 400
-        
     conn = connection()
     try:
         with conn.cursor() as cursor:
