@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 import  psycopg2
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from datetime import timedelta
-
+import os
 app = Flask(__name__)  
 
 app.config['JWT_SECRET_KEY'] = 'it\xb5u\xc3\xaf\xc1Q\xb9\n\x92W\tB\xe4\xfe__\x87\x8c}\xe9\x1e\xb8\x0f'
@@ -10,11 +10,11 @@ jwt = JWTManager(app)
 
 def connection():
  return psycopg2.connect(
-    dbname = "db2022139046",
-    user = "a2022139046",
-    password = "a202425",
-    host="aid.estgoh.ipc.pt",
-    port = 5432
+    dbname = os.environ.get('DB_NAME'),
+    user = os.environ.get('DB_USERNAME'),
+    password = os.environ.get('DB_PASSWORD'),
+    host=os.environ.get('DB_HOST'),
+    port = os.environ.get('DB_PORT')
 )
 
 @app.route('/login_utilizador', methods = ['POST'])
