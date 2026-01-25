@@ -120,7 +120,7 @@ def inserir_questao():
                     "quid": novo_quid
                 }), 201
             else:
-                return jsonify({"mensagem": "Erro ao inserir na base de dados"}), 400
+                return jsonify({"mensagem": "Erro ao inserir a questão"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
