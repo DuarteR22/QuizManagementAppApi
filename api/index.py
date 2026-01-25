@@ -245,8 +245,8 @@ def alterar_questao():
                 )
             """
             cursor.execute(query, (quid, pergunta, num_respostas, respostas, resposta_correta, url))
-            resultado_tupla = cursor.fetchone()
-            resultado = resultado_tupla[0] if resultado_tupla else 0
+            resultado_tuple = cursor.fetchone()
+            resultado = resultado_tuple[0] if resultado_tuple else 0
             conn.commit()
             if resultado > 0:
                 return jsonify({"mensagem": "Questão alterada com sucesso!"}), 200
